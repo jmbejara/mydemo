@@ -263,13 +263,23 @@ sphinx_targets = [
 def copy_docs_src_to_docs():
     """
     Copy all files and subdirectories from the docs_src directory to the _docs directory.
-    This function first removes the _docs directory if it exists, then copies docs_src entirely.
+    This function loops through all files in docs_src and copies them individually to _docs,
+    preserving the directory structure. It does not delete the contents of _docs beforehand.
     """
     src = Path("docs_src")
     dst = Path("_docs")
-    if dst.exists():
-        shutil.rmtree(dst)  # Remove old _docs directory (if any)
-    shutil.copytree(src, dst)
+    
+    # Ensure the destination directory exists
+    dst.mkdir(parents=True, exist_ok=True)
+    
+    # Loop through all files and directories in docs_src
+    for item in src.rglob('*'):
+        relative_path = item.relative_to(src)
+        target = dst / relative_path
+        if item.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+        else:
+            shutil.copy2(item, target)
 
 def copy_docs_build_to_docs():
     """

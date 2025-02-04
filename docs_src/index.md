@@ -29,5 +29,3 @@ apidocs/index
 - {ref}`genindex`
 - {ref}`modindex`
 - {ref}`search`
-
-{{readme_text}}
